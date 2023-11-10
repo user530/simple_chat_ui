@@ -1,46 +1,73 @@
 import React, { useEffect } from 'react';
 import './App.css';
-import { io } from 'socket.io-client';
+import { Socket, io } from 'socket.io-client';
+import { LoginComponent, ChatComponent } from './components'
 
-interface ChatMessage {
-  author: string;
-  text: string;
-}
+
 
 function App() {
-  const socket = io('http://localhost:3001');
-
-  const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>([]);
-  const [messageText, setMessageText] = React.useState<string>('');
+  const socketRef = React.useRef<Socket | null>(null);
+  const [isJoined, setIsJoined] = React.useState<boolean>(false);
 
   useEffect(() => {
-    socket.emit('findAllMessages', {}, (response: ChatMessage[]) => {
-      setChatMessages(response);
-    });
 
-    const addMessage = (msg: ChatMessage) => {
-      setChatMessages(prevMessages => [...prevMessages, msg])
-    }
+    if (!socketRef.current) socketRef.current = io('http://localhost:3001');
 
-    socket.on('message', addMessage)
+    // socketRef.current.emit(
+    //   'findAllMessages',
+    //   {},
+    //   (response: ChatMessage[]) => setChatMessages(response));
+
+    // const addMessage = (msg: ChatMessage) => {
+    //   setChatMessages(prevMessages => [...prevMessages, msg])
+    // }
+
+    // socketRef.current.on('message', addMessage)
 
     return () => {
-      socket.off('message', addMessage);
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
     }
   }, [])
 
-  const sendMessage = () => socket.emit('createMessage', { text: messageText },
-    () => setMessageText(''))
+  const sendMessage = () => {
+    // socketRef.current?.emit(
+    //   'createMessage',
+    //   { text: messageText, author: userName.current },
+    //   () => setMessageText(''));
+  }
+
+  const joinChat = (name: string) => {
+    // socketRef.current?.emit(
+    //   'userJoins',
+    //   { name },
+    //   () => setIsJoined(true));
+  }
+
+  const isTyping = () => {
+    // socketRef.current?.emit(
+    //   'userTyping',
+    //   { isTyping: true });
+
+    // typingTimeout.current = setTimeout(
+    //   () => socketRef.current?.emit('userTyping', { isTyping: false }),
+    //   2000
+    // )
+  }
 
   return (
     <div className="App">
       <div className="chat">
-        <div className="chat-container" >
-          {chatMessages.map((message, ind) => <div className='message p-2' key={ind}>[{message.author}]: {message.text}</div>)}
-        </div>
 
-        <input type="text" value={messageText} onChange={(e) => setMessageText(e.target.value)} />
-        <input type="button" value="Send" onClick={sendMessage} />
+        {isJoined ?
+          <ChatComponent sendMessageCb={() => { console.log('SEND MESSAGE CB') }} />
+          :
+          <LoginComponent isJoined={isJoined} joinCb={() => { console.log('JOIN CB') }} loginCb={() => { console.log('LOGIN CB') }} />
+        }
+
+
       </div>
     </div>
   );
