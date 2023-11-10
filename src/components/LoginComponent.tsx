@@ -1,15 +1,15 @@
 import React from 'react';
 
 interface LoginComponentProps {
-    isJoined: boolean;
     loginCb: (name: string) => void;
     joinCb: () => void;
 }
 
 export const LoginComponent: React.FC<LoginComponentProps> = (props: LoginComponentProps) => {
-    const { isJoined, loginCb, joinCb } = props;
+    const { loginCb, joinCb } = props;
     const nameRef = React.useRef<HTMLInputElement>(null);
 
+    const joinChatHandler = () => loginCb(nameRef.current?.value ?? `Anonymous#${Date.now()}`);
 
     return (
         <>
@@ -20,7 +20,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = (props: LoginCompon
                         <input type="text" ref={nameRef} />
                     </label>
 
-                    <input type="button" value="Join" onClick={joinCb} />
+                    <input type="button" value="Join" onClick={joinChatHandler} />
                 </div>
             </div>
         </>

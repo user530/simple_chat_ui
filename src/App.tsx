@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import './App.css';
 import { Socket, io } from 'socket.io-client';
 import { LoginComponent, ChatComponent } from './components'
-
+import { loginAttemptResponse } from './dtos'
 
 
 function App() {
   const socketRef = React.useRef<Socket | null>(null);
   const [isJoined, setIsJoined] = React.useState<boolean>(false);
+  const [users, setUsers] = React.useState<string[]>([]);
 
   useEffect(() => {
 
@@ -24,6 +25,11 @@ function App() {
 
     // socketRef.current.on('message', addMessage)
 
+    socketRef.current.on('userJoined', (name) => {
+      console.log('USER JOINED!', name)
+      setUsers((oldUsers) => [...oldUsers, name])
+    });
+
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
@@ -31,6 +37,24 @@ function App() {
       }
     }
   }, [])
+
+  const loginCb = React.useCallback(
+    (name: string) => {
+      console.log('LOGIN CB');
+      socketRef.current?.emit(
+        'userLoginAttempt',
+        { name },
+        (res: loginAttemptResponse) => {
+          if (res.status === 'failed') alert(res.message)
+          else {
+            setIsJoined(true);
+            setUsers(res.users);
+          }
+        });
+    }, []
+  )
+
+  const joinCb = React.useCallback(() => { console.log('JOIN CB') }, []);
 
   const sendMessage = () => {
     // socketRef.current?.emit(
@@ -62,9 +86,9 @@ function App() {
       <div className="chat">
 
         {isJoined ?
-          <ChatComponent sendMessageCb={() => { console.log('SEND MESSAGE CB') }} />
+          <ChatComponent users={users} sendMessageCb={() => { console.log('SEND MESSAGE CB') }} />
           :
-          <LoginComponent isJoined={isJoined} joinCb={() => { console.log('JOIN CB') }} loginCb={() => { console.log('LOGIN CB') }} />
+          <LoginComponent joinCb={joinCb} loginCb={loginCb} />
         }
 
 
