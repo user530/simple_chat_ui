@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import './App.css';
 import { Socket, io } from 'socket.io-client';
-import { LoginComponent, ChatComponent } from './components'
-import { loginAttemptResponse } from './dtos'
+import { LoginComponent, ChatComponent } from './components';
+import { loginAttemptResponse } from './dtos';
 
 
 function App() {
