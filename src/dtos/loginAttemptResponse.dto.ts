@@ -1,11 +1,14 @@
-export type loginAttemptResponse = loginAttemptResponseSuccess | loginAttemptResponseFail;
+import { ChatMessage } from '../store/reducers/slices/messagesSlice';
 
-type loginAttemptResponseSuccess = {
+export type LoginAttemptResponse = LoginAttemptResponseSuccess | LoginAttemptResponseFail;
+
+type LoginAttemptResponseSuccess = {
     status: 'success',
     users: string[],
+    messages: ChatMessage[],
 }
 
-type loginAttemptResponseFail = {
+type LoginAttemptResponseFail = {
     status: 'failed',
     message: string,
 }

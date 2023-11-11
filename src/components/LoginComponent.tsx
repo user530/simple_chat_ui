@@ -8,7 +8,11 @@ export const LoginComponent: React.FC<LoginComponentProps> = (props: LoginCompon
     const { loginCb } = props;
     const nameRef = React.useRef<HTMLInputElement>(null);
 
-    const joinChatHandler = () => loginCb(nameRef.current?.value ?? `Anonymous#${Date.now()}`);
+    const joinChatHandler = () => {
+        const nameInput = nameRef.current!.value.trim();
+        const name = nameInput.length === 0 ? `Anonymous#${Date.now()}` : nameInput;
+        loginCb(name);
+    };
 
     return (
         <>

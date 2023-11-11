@@ -1,5 +1,9 @@
-import { loginAttemptResponse } from './loginAttemptResponse.dto';
+import { LoginAttemptResponse } from './loginAttemptResponse.dto';
+import { NewMessageResponse } from './newMessageResponse.dto';
+import { NewMessageRequest } from './newMessageRequest.dto'
 
 export type {
-    loginAttemptResponse,
+    LoginAttemptResponse,
+    NewMessageRequest,
+    NewMessageResponse,
 }

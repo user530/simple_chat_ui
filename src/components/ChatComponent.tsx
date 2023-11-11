@@ -1,19 +1,21 @@
 import React from 'react';
-
-interface ChatMessage {
-    author: string;
-    text: string;
-}
+import { useAppSelector } from '../hooks/chatStoreHooks';
 
 interface ChatComponentProps {
-    users: string[];
-    sendMessageCb: () => void;
+    sendMessageCb: (msg: string) => void;
 }
 
 export const ChatComponent: React.FC<ChatComponentProps> = (props: ChatComponentProps) => {
-    const { users, sendMessageCb, } = props;
-    const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>([]);
+    const { sendMessageCb } = props;
     const chatWindow = React.useRef<HTMLInputElement>(null);
+    const users = useAppSelector((state) => state.users.users);
+    const messages = useAppSelector((state) => state.messages.messages);
+
+    const sendMessageHandler = () => {
+        const chatInput = chatWindow.current!;
+        sendMessageCb(chatInput.value);
+        chatInput.value = '';
+    }
 
     return <>
         <div>
@@ -27,7 +29,7 @@ export const ChatComponent: React.FC<ChatComponentProps> = (props: ChatComponent
                 </div>
                 <div className="chat-messages" style={{ minWidth: '500px', minHeight: '300px', border: '1px solid black' }}>
                     {
-                        chatMessages.map(
+                        messages.map(
                             (message, ind) => <div className='message p-2' key={ind}>[{message.author}]: {message.text}</div>)
                     }
                 </div>
@@ -35,7 +37,7 @@ export const ChatComponent: React.FC<ChatComponentProps> = (props: ChatComponent
             </div>
             <div className="chat-input">
                 <input type="text" ref={chatWindow} placeholder='Enter your message' style={{ minHeight: '50px', minWidth: '500px' }} />
-                <input type="button" value="Send" onClick={sendMessageCb} />
+                <input type="button" value="Send" onClick={sendMessageHandler} />
             </div>
         </div>
     </>

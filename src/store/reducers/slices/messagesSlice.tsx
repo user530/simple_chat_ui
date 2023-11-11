@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface ChatMessage {
+    author: string;
+    text: string;
+}
+
 interface MessagesStoreState {
-    messages: string[];
+    messages: ChatMessage[];
 }
 
 const initialState: MessagesStoreState = {
@@ -12,10 +17,10 @@ const messagesSlice = createSlice({
     name: 'messages',
     initialState,
     reducers: {
-        addMessage(state, action: PayloadAction<string>) {
+        addMessage(state, action: PayloadAction<ChatMessage>) {
             state.messages.push(action.payload);
         },
-        setMessages(state, action: PayloadAction<string[]>) {
+        setMessages(state, action: PayloadAction<ChatMessage[]>) {
             state.messages = action.payload;
         }
     }
