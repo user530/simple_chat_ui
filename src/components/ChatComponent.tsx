@@ -15,6 +15,13 @@ export const ChatComponent: React.FC<ChatComponentProps> = (props: ChatComponent
     const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>([]);
     const chatWindow = React.useRef<HTMLInputElement>(null);
 
+    React.useEffect(
+        () => {
+
+        },
+        []
+    )
+
     return <>
         <div>
             <div className="chat-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

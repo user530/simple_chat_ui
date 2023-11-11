@@ -2,11 +2,10 @@ import React from 'react';
 
 interface LoginComponentProps {
     loginCb: (name: string) => void;
-    joinCb: () => void;
 }
 
 export const LoginComponent: React.FC<LoginComponentProps> = (props: LoginComponentProps) => {
-    const { loginCb, joinCb } = props;
+    const { loginCb } = props;
     const nameRef = React.useRef<HTMLInputElement>(null);
 
     const joinChatHandler = () => loginCb(nameRef.current?.value ?? `Anonymous#${Date.now()}`);

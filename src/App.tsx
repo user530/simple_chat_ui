@@ -11,19 +11,9 @@ function App() {
   const [users, setUsers] = React.useState<string[]>([]);
 
   useEffect(() => {
-
-    if (!socketRef.current) socketRef.current = io('http://localhost:3001');
-
-    // socketRef.current.emit(
-    //   'findAllMessages',
-    //   {},
-    //   (response: ChatMessage[]) => setChatMessages(response));
-
-    // const addMessage = (msg: ChatMessage) => {
-    //   setChatMessages(prevMessages => [...prevMessages, msg])
-    // }
-
-    // socketRef.current.on('message', addMessage)
+    if (!socketRef.current) {
+      socketRef.current = io('http://localhost:3001');
+    }
 
     socketRef.current.on('userJoined', (name) => {
       console.log('USER JOINED!', name)
@@ -32,7 +22,8 @@ function App() {
 
     return () => {
       if (socketRef.current) {
-        socketRef.current.disconnect();
+        socketRef.current.emit('userLeft');
+        socketRef.current?.disconnect();
         socketRef.current = null;
       }
     }
@@ -40,7 +31,6 @@ function App() {
 
   const loginCb = React.useCallback(
     (name: string) => {
-      console.log('LOGIN CB');
       socketRef.current?.emit(
         'userLoginAttempt',
         { name },
@@ -53,8 +43,6 @@ function App() {
         });
     }, []
   )
-
-  const joinCb = React.useCallback(() => { console.log('JOIN CB') }, []);
 
   const sendMessage = () => {
     // socketRef.current?.emit(
@@ -88,7 +76,7 @@ function App() {
         {isJoined ?
           <ChatComponent users={users} sendMessageCb={() => { console.log('SEND MESSAGE CB') }} />
           :
-          <LoginComponent joinCb={joinCb} loginCb={loginCb} />
+          <LoginComponent loginCb={loginCb} />
         }
 
 
