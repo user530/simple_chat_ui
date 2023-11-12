@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import './App.css';
 import { Socket, io } from 'socket.io-client';
 import { LoginComponent, ChatComponent } from './components';
-import { LoginAttemptResponse, NewMessageRequest, NewMessageResponse } from './dtos';
+import { IsTypingRequest, IsTypingResponse, LoginAttemptRequest, LoginAttemptResponse, NewMessageRequest, NewMessageResponse } from './dtos';
 import { useAppDispatch } from './hooks/chatStoreHooks';
-import { addUser, removeUser, setUsers } from './store/reducers/slices';
+import { addTypingUser, addUser, removeTypingUser, removeUser, setUsers } from './store/reducers/slices';
 import { addMessage, setMessages } from './store/reducers/slices/messagesSlice';
 
 
@@ -31,6 +31,16 @@ function App() {
       'newMessage',
       (message: NewMessageResponse) => dispatch(addMessage(message)))
 
+    socketRef.current.on(
+      'isTyping',
+      (typingEvent: IsTypingResponse) => {
+        const { isTyping, name } = typingEvent;
+
+        if (isTyping) dispatch(addTypingUser(name));
+        else dispatch(removeTypingUser(name));
+      }
+    )
+
     return () => {
       if (socketRef.current) {
         socketRef.current?.disconnect();
@@ -40,12 +50,15 @@ function App() {
   }, [])
 
   const loginCb = React.useCallback(
-    (name: string) => {
+    (userName: string) => {
+      const name: LoginAttemptRequest = { name: userName };
+
       socketRef.current?.emit(
         'userLoginAttempt',
-        { name },
+        name,
         (res: LoginAttemptResponse) => {
-          if (res.status === 'failed') alert(res.message)
+          const { status } = res;
+          if (status === 'failed') alert(res.message)
           else {
             setIsJoined(true);
             dispatch(setUsers(res.users));
@@ -67,16 +80,30 @@ function App() {
     []
   )
 
-  const isTyping = () => {
-    // socketRef.current?.emit(
-    //   'userTyping',
-    //   { isTyping: true });
+  const isTypingCb = React.useCallback(
+    (timeout: NodeJS.Timeout | null) => {
+      const TYPING_DELAY_MS = 3000;
+      const startedTyping: IsTypingRequest = { isTyping: true };
+      const stopedTyping: IsTypingRequest = { isTyping: false };
 
-    // typingTimeout.current = setTimeout(
-    //   () => socketRef.current?.emit('userTyping', { isTyping: false }),
-    //   2000
-    // )
-  }
+      if (timeout) clearTimeout(timeout);
+
+      socketRef.current?.emit(
+        'userTyping',
+        startedTyping
+      );
+
+      return setTimeout(
+        () => {
+          socketRef.current?.emit(
+            'userTyping',
+            stopedTyping
+          )
+        },
+        TYPING_DELAY_MS);
+    },
+    []
+  )
 
   return (
     <div className="App">
@@ -84,7 +111,7 @@ function App() {
 
         {
           isJoined ?
-            <ChatComponent sendMessageCb={sendMessageCb} />
+            <ChatComponent sendMessageCb={sendMessageCb} isTypingCb={isTypingCb} />
             :
             <LoginComponent loginCb={loginCb} />
         }

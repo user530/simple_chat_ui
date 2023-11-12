@@ -1,13 +1,16 @@
 import React from 'react';
 import { useAppSelector } from '../hooks/chatStoreHooks';
+import { TypingUsersComponent } from './TypingUsersComponent';
 
 interface ChatComponentProps {
     sendMessageCb: (msg: string) => void;
+    isTypingCb: (timeout: NodeJS.Timeout | null) => NodeJS.Timeout;
 }
 
 export const ChatComponent: React.FC<ChatComponentProps> = (props: ChatComponentProps) => {
-    const { sendMessageCb } = props;
+    const { sendMessageCb, isTypingCb } = props;
     const chatWindow = React.useRef<HTMLInputElement>(null);
+    const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
     const users = useAppSelector((state) => state.users.users);
     const messages = useAppSelector((state) => state.messages.messages);
 
@@ -15,6 +18,11 @@ export const ChatComponent: React.FC<ChatComponentProps> = (props: ChatComponent
         const chatInput = chatWindow.current!;
         sendMessageCb(chatInput.value);
         chatInput.value = '';
+    }
+
+    const isTypingHandler = () => {
+        const timer = isTypingCb(timeoutRef.current);
+        timeoutRef.current = timer;
     }
 
     return <>
@@ -36,9 +44,11 @@ export const ChatComponent: React.FC<ChatComponentProps> = (props: ChatComponent
 
             </div>
             <div className="chat-input">
-                <input type="text" ref={chatWindow} placeholder='Enter your message' style={{ minHeight: '50px', minWidth: '500px' }} />
+                <input type="text" ref={chatWindow} placeholder='Enter your message' style={{ minHeight: '50px', minWidth: '500px' }} onChange={isTypingHandler} />
                 <input type="button" value="Send" onClick={sendMessageHandler} />
             </div>
+
+            <TypingUsersComponent />
         </div>
     </>
 }
