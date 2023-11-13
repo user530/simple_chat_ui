@@ -6,6 +6,7 @@ import { IsTypingRequest, IsTypingResponse, LoginAttemptRequest, LoginAttemptRes
 import { useAppDispatch } from './hooks/chatStoreHooks';
 import { addTypingUser, addUser, removeTypingUser, removeUser, setUsers } from './store/reducers/slices';
 import { addMessage, setMessages } from './store/reducers/slices/messagesSlice';
+import { GrChat, GrClose } from 'react-icons/gr'
 
 
 function App() {
@@ -84,6 +85,8 @@ function App() {
     []
   )
 
+  const closeChatHandler = () => { setIsJoined(false) };
+
   const isTypingCb = React.useCallback(
     (timeout: NodeJS.Timeout | null) => {
       const TYPING_DELAY_MS = 3000;
@@ -111,11 +114,36 @@ function App() {
 
   return (
     <div className="App">
-      {
-        isJoined
-          ? <ChatComponent sendMessageCb={sendMessageCb} isTypingCb={isTypingCb} />
-          : <LoginComponent loginCb={loginCb} />
-      }
+      <div className='custom-container'>
+        <div className='window'>
+          <div className='window-header'>
+            <GrChat className='window-header--icon' />
+            <span className='window-header--text'>WinChat</span>
+            {
+              isJoined
+                ? <GrClose className='window-header--controls' onClick={closeChatHandler} />
+                : null
+            }
+          </div>
+
+          <div className='window-controls'>
+            <div><u>F</u>ile</div>
+            <div><u>V</u>iew</div>
+            <div><u>T</u>ools</div>
+            <div><u>H</u>elp</div>
+          </div>
+
+          <hr className='window-linebreak' />
+
+          <div className="window-body">
+            {
+              isJoined
+                ? <ChatComponent sendMessageCb={sendMessageCb} isTypingCb={isTypingCb} />
+                : <LoginComponent loginCb={loginCb} />
+            }
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

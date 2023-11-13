@@ -40,6 +40,7 @@
 .window-header--controls {
   background-color: #c0c0c0;
   border: 1px solid black;
+  cursor: pointer;
 }
 
 .window-controls {
@@ -74,6 +75,93 @@
 }
 
 .window-btnBig:hover {
-  box-shadow: inset 0px 0px 0px 1px black;
+  cursor: pointer;
+}
+
+.chat-output {
+  display: flex;
+  column-gap: 25px;
+  line-height: 1.5;
+}
+
+.users {
+  
+}
+
+.users-heading {
+  margin: 0px 0px 10px 0px;
+  text-align: start;
+}
+
+.users-list {
+  width: 200px;
+  height: 350px;
+  padding: 15px 10px;
+  background-color: white;  
+  border: 1px solid black;
+  overflow: hidden;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.chat-user-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-inner {
+  flex-grow: 1;
+}
+
+.messages-header {
+  margin: 0px 0px 10px 0px;
+  text-align: start;
+}
+
+.messages-window {
+  width: 600px;
+  height: 300px;
+  padding: 15px;
+  background-color: white;  
+  border: 1px solid black;
+  text-align: start;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.chat-message {
+
+}
+
+.chat-outer {
+  padding: 5px 0 ;
+}
+
+.chat-userTyping {
+  text-align: left;
+}
+
+.chat-input {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-around;
+  column-gap: 30px;
+}
+
+.chat-inputText {
+  flex-grow: 1;
+  padding: 0 15px;
+}
+
+.chat-inputBtn {
+  width: 20%;
+  font-size: 24px;
   cursor: pointer;
 }

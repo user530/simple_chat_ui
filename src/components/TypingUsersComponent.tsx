@@ -25,8 +25,10 @@ export const TypingUsersComponent: React.FC = () => {
         [typingUsers]
     )
 
-    return <div className='typing-users'>
-        <span>{displayString}</span>
-    </div>
+    return (
+        <>
+            <div className='chat-userTyping'>{displayString}</div>
+        </>
+    )
 }
 
