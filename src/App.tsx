@@ -111,16 +111,11 @@ function App() {
 
   return (
     <div className="App">
-      <div className="chat">
-
-        {
-          isJoined ?
-            <ChatComponent sendMessageCb={sendMessageCb} isTypingCb={isTypingCb} />
-            :
-            <LoginComponent loginCb={loginCb} />
-        }
-
-      </div>
+      {
+        isJoined
+          ? <ChatComponent sendMessageCb={sendMessageCb} isTypingCb={isTypingCb} />
+          : <LoginComponent loginCb={loginCb} />
+      }
     </div>
   );
 }

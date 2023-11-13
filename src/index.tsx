@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import chatStore from './store/chatStore';
 
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

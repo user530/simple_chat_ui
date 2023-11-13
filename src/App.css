@@ -1,38 +1,79 @@
 .App {
   text-align: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #208c71;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.custom-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.window {
+  background-color: #c0c0c0;
+  border: 2px solid black;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.window-header {
+  height: 30px;
+  background-color: #000080;
+  padding: 5px 10px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  font-size: 24px;
+}
+
+.window-header--icon {
+  background-color: #fff;
+}
+
+.window-header--text {
+  flex-grow: 1;
+  text-align: start;
+}
+
+.window-header--controls {
+  background-color: #c0c0c0;
+  border: 1px solid black;
+}
+
+.window-controls {
+  display: flex;
+  padding: 5px 10px;
+  column-gap: 10px;
+  font-size: 18px;
+}
+
+.window-linebreak {
+  margin: 0px 5px;
+}
+
+.window-body {
+  margin: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  row-gap: 32px;
 }
 
-.App-link {
-  color: #61dafb;
+.window-textInput {
+  height: 32px;
+  padding-left: 10px;
+  font-size: 24px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.window-btnBig {
+  width: 33%;
+  padding-left: 10px;
+  font-size: 24px;
+}
+
+.window-btnBig:hover {
+  box-shadow: inset 0px 0px 0px 1px black;
+  cursor: pointer;
 }
